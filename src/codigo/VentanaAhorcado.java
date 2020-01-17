@@ -19,13 +19,17 @@ public class VentanaAhorcado extends javax.swing.JFrame {
     //Esta variable guarda cuántos fallos tengo
     int numeroFallos = 0;
 
+    boolean partidaTerminada = false;//Indica si la partida ha terminado
+
     String palabraOculta = eligePalabra();
 
     //este método recibe el botón que ha sido pulsado
     //y procesa la letra de su etiqueta
     private void chequeaBoton(JButton boton) {
-        boton.setEnabled(false);
-        chequeLetra(boton.getText());
+        if (!partidaTerminada) {
+            boton.setEnabled(false);
+            chequeLetra(boton.getText());
+        }
     }
 
     private void chequeLetra(String letra) {
@@ -48,10 +52,14 @@ public class VentanaAhorcado extends javax.swing.JFrame {
             if (!palabraGuiones.contains("_")) {
                 numeroFallos = -1;
                 dibujaImagen();
+                palabraOculta = eligePalabra();
             }
 
         } else {
             numeroFallos++;
+            if(numeroFallos>=6){
+                partidaTerminada = true;
+            }
             dibujaImagen();
         }
 
@@ -62,11 +70,11 @@ public class VentanaAhorcado extends javax.swing.JFrame {
         String nombreImagen = "";
 
         switch (numeroFallos) {
-            
+
             case -1:
                 nombreImagen = "/Imagenes/acertasteTodo.png";
                 break;
-            
+
             case 0:
                 nombreImagen = "/Imagenes/ahorcado_0.png";
                 break;
@@ -112,25 +120,25 @@ public class VentanaAhorcado extends javax.swing.JFrame {
         initComponents();
         dibujaImagen();
         //Inicializo el jLabel en el que se muestran los guiones bajos
-        String aux ="";
-        
+        String aux = "";
+
         for (int i = 0; i < palabraOculta.length(); i++) {
-            aux+="_ ";
+            aux += "_ ";
         }
-        
+
         jLabel1.setText(aux);
 
     }
-    
+
     //Va a seleccionar al azar una palabra de un array de palabras
-    private String eligePalabra(){
-        String[]  listaPalabras = {"HOLA","BORREGUITO","BABYYODA","ABASCAL",
-            "FOROCOCHES","FOROPERU","ILITRI","ZAPATO","HITLER","POLE","SUBPOLE"};
-        
+    private String eligePalabra() {
+        String[] listaPalabras = {"HOLA", "BORREGUITO", "BABYYODA", "ABASCAL",
+            "FOROCOCHES", "FOROPERU", "ILITRI", "ZAPATO", "HITLER", "POLE", "SUBPOLE"};
+
         Random aleatorio = new Random(); //Variable aleatoria para elegir palabra
-        
+
         int posicion = aleatorio.nextInt(listaPalabras.length);
-        
+
         return listaPalabras[posicion].toUpperCase();
     }
 
