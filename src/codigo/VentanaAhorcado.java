@@ -52,7 +52,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
             if (!palabraGuiones.contains("_")) {
                 numeroFallos = -1;
                 dibujaImagen();
-                palabraOculta = eligePalabra();
+                partidaTerminada = true;
             }
 
         } else {
