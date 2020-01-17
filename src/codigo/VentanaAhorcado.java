@@ -5,6 +5,9 @@
  */
 package codigo;
 
+import java.awt.Image;
+import java.util.Random;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 /**
@@ -13,17 +16,122 @@ import javax.swing.JButton;
  */
 public class VentanaAhorcado extends javax.swing.JFrame {
 
+    //Esta variable guarda cuántos fallos tengo
+    int numeroFallos = 0;
+
+    String palabraOculta = eligePalabra();
+
     //este método recibe el botón que ha sido pulsado
     //y procesa la letra de su etiqueta
-    private void chequeaBoton(JButton boton){
+    private void chequeaBoton(JButton boton) {
         boton.setEnabled(false);
+        chequeLetra(boton.getText());
     }
-    
+
+    private void chequeLetra(String letra) {
+
+        String palabraGuiones = jLabel1.getText();
+
+        if (palabraOculta.contains(letra)) {
+            //En este caso la letra sí que está
+            //y hay  que : 1º la letra o letras se descubran en los guiones
+            //2º
+            char letraPulsada = letra.charAt(0);
+
+            for (int i = 0; i < palabraOculta.length(); i++) {
+                if (letraPulsada == palabraOculta.charAt(i)) {
+                    palabraGuiones = palabraGuiones.substring(0, i * 2) + letra + palabraGuiones.substring(2 * i + 1);
+                }
+            }
+
+            jLabel1.setText(palabraGuiones);
+            if (!palabraGuiones.contains("_")) {
+                numeroFallos = -1;
+                dibujaImagen();
+            }
+
+        } else {
+            numeroFallos++;
+            dibujaImagen();
+        }
+
+    }
+
+    //Cambia la imágen en función de las vidas
+    private void dibujaImagen() {
+        String nombreImagen = "";
+
+        switch (numeroFallos) {
+            
+            case -1:
+                nombreImagen = "/Imagenes/acertasteTodo.png";
+                break;
+            
+            case 0:
+                nombreImagen = "/Imagenes/ahorcado_0.png";
+                break;
+
+            case 1:
+                nombreImagen = "/Imagenes/ahorcado_1.png";
+                break;
+
+            case 2:
+                nombreImagen = "/Imagenes/ahorcado_2.png";
+                break;
+
+            case 3:
+                nombreImagen = "/Imagenes/ahorcado_3.png";
+                break;
+
+            case 4:
+                nombreImagen = "/Imagenes/ahorcado_4.png";
+                break;
+
+            case 5:
+                nombreImagen = "/Imagenes/ahorcado_5.png";
+                break;
+            default:
+                nombreImagen = "/Imagenes/ahorcado_fin.png";
+                break;
+        }
+
+        ImageIcon miImagen = new ImageIcon((new ImageIcon(getClass().getResource(nombreImagen))
+                .getImage()
+                .getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(), Image.SCALE_DEFAULT))
+        );
+
+        //Cargo la imagen en el jLabel que muestra los fallos
+        jLabel2.setIcon(miImagen);
+
+    }
+
     /**
      * Creates new form VentanaAhorcado
      */
     public VentanaAhorcado() {
         initComponents();
+        dibujaImagen();
+        //Inicializo el jLabel en el que se muestran los guiones bajos
+        String aux ="";
+        
+        for (int i = 0; i < palabraOculta.length(); i++) {
+            aux+="_ ";
+        }
+        
+        jLabel1.setText(aux);
+
+    }
+    
+    //Va a seleccionar al azar una palabra de un array de palabras
+    private String eligePalabra(){
+        String[]  listaPalabras = {"HOLA","BORREGUITO","BABYYODA","ABASCAL",
+            "FOROCOCHES","FOROPERU","ILITRI","ZAPATO","HITLER","POLE","SUBPOLE"};
+        
+        Random aleatorio = new Random(); //Variable aleatoria para elegir palabra
+        
+        int posicion = aleatorio.nextInt(listaPalabras.length);
+        
+        return listaPalabras[posicion].toUpperCase();
     }
 
     /**
@@ -41,7 +149,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
         botonB = new javax.swing.JButton();
         botonD = new javax.swing.JButton();
         botonC = new javax.swing.JButton();
-        botonE = new javax.swing.JButton();
+        botonF = new javax.swing.JButton();
         botonG = new javax.swing.JButton();
         botonH = new javax.swing.JButton();
         botonI = new javax.swing.JButton();
@@ -63,6 +171,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
         botonX = new javax.swing.JButton();
         botonY = new javax.swing.JButton();
         botonZ = new javax.swing.JButton();
+        botonE = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,10 +207,10 @@ public class VentanaAhorcado extends javax.swing.JFrame {
             }
         });
 
-        botonE.setText("F");
-        botonE.addActionListener(new java.awt.event.ActionListener() {
+        botonF.setText("F");
+        botonF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonEActionPerformed(evt);
+                botonFActionPerformed(evt);
             }
         });
 
@@ -252,6 +361,13 @@ public class VentanaAhorcado extends javax.swing.JFrame {
             }
         });
 
+        botonE.setText("E");
+        botonE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -261,9 +377,6 @@ public class VentanaAhorcado extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(130, 130, 130)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,14 +418,16 @@ public class VentanaAhorcado extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(botonM, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(12, 12, 12)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(botonE, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(botonF, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
                                         .addComponent(botonG, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(botonH, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(botonI, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(botonN, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -323,7 +438,10 @@ public class VentanaAhorcado extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(botonP, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(botonQ, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(botonQ, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -339,10 +457,11 @@ public class VentanaAhorcado extends javax.swing.JFrame {
                     .addComponent(botonB, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botonC, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botonD, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(botonE, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botonG, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botonH, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(botonI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(botonI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonE, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonJ, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -365,115 +484,119 @@ public class VentanaAhorcado extends javax.swing.JFrame {
                     .addComponent(botonX, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botonY, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botonZ, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonAActionPerformed
 
     private void botonBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonBActionPerformed
 
     private void botonCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonCActionPerformed
 
     private void botonDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonDActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonDActionPerformed
 
-    private void botonEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEActionPerformed
-        chequeaBoton((JButton)evt.getSource());
-    }//GEN-LAST:event_botonEActionPerformed
+    private void botonFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonFActionPerformed
+        chequeaBoton((JButton) evt.getSource());
+    }//GEN-LAST:event_botonFActionPerformed
 
     private void botonGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonGActionPerformed
 
     private void botonHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonHActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonHActionPerformed
 
     private void botonIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonIActionPerformed
 
     private void botonJActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonJActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonJActionPerformed
 
     private void botonKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonKActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonKActionPerformed
 
     private void botonLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonLActionPerformed
 
     private void botonMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonMActionPerformed
 
     private void botonNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonNActionPerformed
 
     private void botonÑActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonÑActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonÑActionPerformed
 
     private void botonOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonOActionPerformed
 
     private void botonWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonWActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonWActionPerformed
 
     private void botonVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonVActionPerformed
 
     private void botonUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonUActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonUActionPerformed
 
     private void botonTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonTActionPerformed
 
     private void botonSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonSActionPerformed
 
     private void botonRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonRActionPerformed
 
     private void botonQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonQActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonQActionPerformed
 
     private void botonPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonPActionPerformed
 
     private void botonXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonXActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonXActionPerformed
 
     private void botonYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonYActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonYActionPerformed
 
     private void botonZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonZActionPerformed
-        chequeaBoton((JButton)evt.getSource());
+        chequeaBoton((JButton) evt.getSource());
     }//GEN-LAST:event_botonZActionPerformed
+
+    private void botonEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEActionPerformed
+        chequeaBoton((JButton) evt.getSource());
+    }//GEN-LAST:event_botonEActionPerformed
 
     /**
      * @param args the command line arguments
@@ -516,6 +639,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
     private javax.swing.JButton botonC;
     private javax.swing.JButton botonD;
     private javax.swing.JButton botonE;
+    private javax.swing.JButton botonF;
     private javax.swing.JButton botonG;
     private javax.swing.JButton botonH;
     private javax.swing.JButton botonI;
