@@ -38,8 +38,8 @@ public class VentanaAhorcado extends javax.swing.JFrame {
 
         if (palabraOculta.contains(letra)) {
             //En este caso la letra sí que está
-            //y hay  que : 1º la letra o letras se descubran en los guiones
-            //2º
+            //y hay  que conseguir que la letra o letras se descubran en los guiones
+
             char letraPulsada = letra.charAt(0);
 
             for (int i = 0; i < palabraOculta.length(); i++) {
@@ -57,7 +57,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
 
         } else {
             numeroFallos++;
-            if(numeroFallos>=6){
+            if (numeroFallos >= 6) {
                 partidaTerminada = true;
             }
             dibujaImagen();
